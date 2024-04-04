@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="337.0" prefWidth="603.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Chat.ClientSide.ChatViewController">
+   <children>
+      <HBox prefHeight="43.0" prefWidth="600.0">
+         <children>
+            <Label prefHeight="40.0" prefWidth="207.0" text="GoHappyChat">
+               <font>
+                  <Font size="27.0" />
+               </font>
+            </Label>
+            <HBox prefHeight="42.0" prefWidth="244.0">
+               <children>
+                  <TextField fx:id="nameField" prefHeight="42.0" prefWidth="99.0" promptText="Enter alias" />
+                  <Button mnemonicParsing="false" onAction="#onNameFieldButtonPressed" prefHeight="39.0" prefWidth="86.0" text="Enter" />
+               </children>
+            </HBox>
+            <Button mnemonicParsing="false" onAction="#onNormalChatButtonPressed" prefHeight="40.0" prefWidth="60.0" text="Normal" />
+            <Button mnemonicParsing="false" onAction="#onBoldChatButtonPressed" prefHeight="40.0" prefWidth="50.0" text="Bold" />
+            <Button mnemonicParsing="false" onAction="#onItalicButtonPressed" prefHeight="40.0" prefWidth="50.0" text="Itallic" />
+         </children>
+      </HBox>
+      <VBox prefHeight="262.0" prefWidth="603.0">
+         <children>
+            <TextArea fx:id="textArea" editable="false" prefHeight="310.0" prefWidth="603.0" />
+         </children>
+      </VBox>
+      <HBox prefHeight="35.0" prefWidth="600.0">
+         <children>
+            <TextField fx:id="messageInputTextField" prefHeight="57.0" prefWidth="560.0" />
+            <Button mnemonicParsing="false" onAction="#onMessageSendButtonPressed" prefHeight="39.0" prefWidth="43.0" text="Send" />
+         </children>
+      </HBox>
+   </children>
+</VBox>
