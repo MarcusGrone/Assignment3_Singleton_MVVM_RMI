@@ -5,11 +5,11 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import java.io.IOException;
+import java.rmi.NotBoundException;
 
 public class ChatViewModel
 {
   private Model model;
-  // private final BooleanProperty isConnected = new SimpleBooleanProperty(false);
   private Session session = Session.getInstance();
   private StringProperty message = new SimpleStringProperty();
 
@@ -17,7 +17,7 @@ public class ChatViewModel
     this.model = model;
     model.addPropertyChangeListener("message", event -> {
       Message message = (Message) event.getNewValue();
-      messageProperty().set(message.getName() + message.getMessage());
+      messageProperty().set(message.getName() + ": " + message.getMessage());
     });
 
   }
@@ -28,15 +28,11 @@ public class ChatViewModel
     return message;
   }
 
-  public void sendMessage(String name, String message)
-  {
-    try
-    {
-      System.out.println("Message recieved by ViewModel");
+  public void sendMessage(String name, String message)  {
+    try    {
       model.sendMessage(name, message);
     }
-    catch (IOException e)
-    {
+    catch (IOException e)    {
       e.printStackTrace();
     }
   }
@@ -46,12 +42,10 @@ public class ChatViewModel
     return session.getCurrentClient();
   }
 
-  public void connect(String host, int port, String clientName)
-      throws IOException
-  {
-    model.connectToServer(host, port, clientName);
+  public void connect(String host, int port, String clientName) throws IOException, NotBoundException {
     session.setCurrentClient(clientName);
   }
+
 
   public void messageToNormal()
   {

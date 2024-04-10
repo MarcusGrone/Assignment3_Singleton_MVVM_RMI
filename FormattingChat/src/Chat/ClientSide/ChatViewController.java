@@ -7,6 +7,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.rmi.NotBoundException;
 
 public class ChatViewController
 {
@@ -37,10 +39,10 @@ public class ChatViewController
     });
   }
 
-  public void onNameFieldButtonPressed() throws IOException
+  public void onNameFieldButtonPressed() throws IOException, NotBoundException
   {
     String clientName = nameField.getText();
-    chatViewModel.connect("localhost", 2910, clientName);
+    chatViewModel.connect("localhost", 1099, clientName);
     nameField.clear();
   }
 

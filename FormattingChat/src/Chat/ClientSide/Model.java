@@ -3,56 +3,49 @@ package Chat.ClientSide;
 import Chat.ClientSide.Strategy.BoldStrat;
 import Chat.ClientSide.Strategy.ItalicStrat;
 import Chat.ClientSide.Strategy.NormalStrat;
+import Chat.Shared.ClientInterface;
+import Chat.Shared.ServerInterface;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.IOException;
-import java.net.Socket;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 public class Model implements Subject
 {
-  private ClientConnection clientConnection;
-  private Socket socket;
-
+  private ClientInterface client;
   private PropertyChangeSupport support;
   private Message message;
 
   public Model()
   {
+    this.client = new Client(this);
     support = new PropertyChangeSupport(true);
     message = new Message("", "");
   }
 
-  public boolean connectToServer(String host, int port, String clientName)
-      throws IOException
+  public void sendMessage(String name, String messageContent)
+      throws RemoteException
   {
-    try
-    {
-      this.socket = new Socket(host, port);
-      this.clientConnection = new ClientConnection(socket, message -> {
-        support.firePropertyChange("message", null, message);
-      });
-      System.out.println("From Model: Client has connected.");
-      new Thread(clientConnection).start();
-      return true;
-    }
-    catch (IOException e)
-    {
-      System.out.println(e);
-      return false;
-    }
-  }
-
-  public void sendMessage(String name, String messageContent) throws IOException {
     Message messageToSend = new Message(name, messageContent);
     messageToSend.setChatStrategy(message.getChatStrategy());
-    clientConnection.send(messageToSend.formatMessage());
+    client.sendMessage(messageToSend.formatMessage());
+
   }
 
-  @Override
-  public void addPropertyChangeListener(String name, PropertyChangeListener listener) {
+  @Override public void addPropertyChangeListener(String name,
+      PropertyChangeListener listener)
+  {
     support.addPropertyChangeListener(name, listener);
   }
+
+  public void update(Message message)
+  {
+    support.firePropertyChange("message",null,message);
+  }
+
 
   public void strategyBold()
   {
@@ -63,15 +56,13 @@ public class Model implements Subject
   public void strategyItalic()
   {
     message.setChatStrategy(new ItalicStrat());
-    support.firePropertyChange("strategyUpdated", null,
-        new ItalicStrat());
+    support.firePropertyChange("strategyUpdated", null, new ItalicStrat());
   }
 
   public void strategyNormal()
   {
     message.setChatStrategy(new NormalStrat());
-    support.firePropertyChange("strategyUpdated", null,
-        new NormalStrat());
+    support.firePropertyChange("strategyUpdated", null, new NormalStrat());
   }
 
 }
